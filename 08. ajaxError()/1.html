@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jQuery ajaxError Demo</title>
+
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // 全局 ajax 错误监听
+        $(document).ajaxError(function (event, xhr, settings, thrownError) {
+          $("#log").append(
+            "<p style='color:red;'>请求失败：" +
+              settings.url +
+              " | 错误：" +
+              thrownError +
+              "</p>",
+          );
+        });
+
+        // 点击触发 Ajax 请求（请求一个不存在的资源）
+        $("#btn").click(function () {
+          $("#result").load("not-exist-file.html");
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <h2>ajaxError() Demo</h2>
+
+    <button id="btn">发送 Ajax 请求（触发错误）</button>
+
+    <div id="result" style="margin-top: 20px">结果区域</div>
+
+    <div id="log" style="margin-top: 20px">
+      <strong>错误日志：</strong>
+    </div>
+  </body>
+</html>
