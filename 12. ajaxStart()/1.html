@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jQuery ajaxStart Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      #loading {
+        display: none;
+        color: red;
+        font-weight: bold;
+      }
+      #result {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ajaxStart() 示例</h2>
+
+    <button id="btn">发送 Ajax 请求</button>
+
+    <div id="loading">Loading...</div>
+    <div id="result">结果区域</div>
+
+    <script>
+      $(document).ready(function () {
+        // 当 Ajax 请求开始时触发
+        $(document).ajaxStart(function () {
+          $("#loading").show();
+          console.log("ajaxStart 触发");
+        });
+
+        // Ajax 完成时隐藏 loading（配合 ajaxStop 更完整）
+        $(document).ajaxStop(function () {
+          $("#loading").hide();
+        });
+
+        // 点击按钮触发 Ajax
+        $("#btn").click(function () {
+          $.ajax({
+            url: "https://jsonplaceholder.typicode.com/posts/1",
+            method: "GET",
+            success: function (data) {
+              $("#result").html(
+                "<h3>" + data.title + "</h3><p>" + data.body + "</p>",
+              );
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

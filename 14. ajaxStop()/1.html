@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jQuery ajaxStop Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial;
+        text-align: center;
+        margin-top: 50px;
+      }
+      #loading {
+        display: none;
+        color: red;
+        font-weight: bold;
+      }
+      #result {
+        margin-top: 20px;
+        color: green;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>ajaxStop() Demo</h2>
+
+    <div id="loading">Loading...</div>
+    <button id="btn">发送 Ajax 请求</button>
+
+    <div id="result"></div>
+
+    <script>
+      $(document).ready(function () {
+        // Ajax 开始时显示 loading
+        $(document).ajaxStart(function () {
+          $("#loading").show();
+        });
+
+        // 所有 Ajax 完成后触发
+        $(document).ajaxStop(function () {
+          $("#loading").hide();
+          alert("所有 Ajax 请求已完成！");
+        });
+
+        $("#btn").click(function () {
+          // 模拟多个 Ajax 请求
+          for (let i = 1; i <= 3; i++) {
+            $.ajax({
+              url: "https://jsonplaceholder.typicode.com/posts/" + i,
+              method: "GET",
+              success: function (data) {
+                $("#result").append("<p>加载: " + data.title + "</p>");
+              },
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

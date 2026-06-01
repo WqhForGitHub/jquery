@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jQuery ajaxSuccess Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      .box {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      .log {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ajaxSuccess() Demo</h2>
+
+    <button id="btn">发送 Ajax 请求</button>
+
+    <div class="box result">结果区域</div>
+    <div class="box log">日志区域</div>
+
+    <script>
+      // 1. 监听全局 ajaxSuccess 事件
+      $(document).ajaxSuccess(function (event, xhr, settings) {
+        $(".log").html(
+          "✅ ajaxSuccess 触发<br>" +
+            "请求地址: " +
+            settings.url +
+            "<br>" +
+            "返回内容: " +
+            xhr.responseText,
+        );
+      });
+
+      // 2. 点击按钮发送 Ajax 请求
+      $("#btn").click(function () {
+        $(".result").load("https://jsonplaceholder.typicode.com/posts/1");
+      });
+    </script>
+  </body>
+</html>
