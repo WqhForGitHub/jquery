@@ -1,0 +1,11 @@
+$("div.test").bind({
+  click: function () {
+    $(this).addClass("active");
+  },
+  mouseenter: function () {
+    $(this).addClass("inside");
+  },
+  mouseleave: function () {
+    $(this).removeClass("inside");
+  },
+});

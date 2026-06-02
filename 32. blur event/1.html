@@ -1,0 +1,16 @@
+<form>
+  <input id="username" type="text" placeholder="用户名" />
+  <span id="msg"></span>
+</form>
+
+<script>
+  $("#username").on("blur", function () {
+    let val = $(this).val();
+
+    if (val === "") {
+      $("#msg").text("不能为空").css("color", "red");
+    } else {
+      $("#msg").text("OK").css("color", "green");
+    }
+  });
+</script>
