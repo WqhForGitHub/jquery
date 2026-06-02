@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>children demo</title>
+    <style>
+      body {
+        font-size: 16px;
+        font-weight: bolder;
+      }
+      span {
+        color: blue;
+      }
+      p {
+        margin: 5px 0;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+  </head>
+  <body>
+    <p>Hello (this is a paragraph)</p>
+
+    <div><span>Hello Again (this span is a child of the a div)</span></div>
+    <p>And <span>Again</span> (in another paragraph)</p>
+
+    <div>And One Last <span>Time</span> (most text directly in a div)</div>
+
+    <script>
+      $("div").children().css("border-bottom", "3px double red");
+    </script>
+  </body>
+</html>

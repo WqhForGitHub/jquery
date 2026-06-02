@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jQuery click() 综合 Demo</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      button {
+        margin: 5px;
+        padding: 8px 12px;
+      }
+      .box {
+        width: 200px;
+        height: 100px;
+        background: #4caf50;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .item {
+        background: #2196f3;
+        color: #fff;
+        padding: 5px;
+        margin: 5px 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>jQuery click() Demo</h2>
+
+    <!-- 按钮 -->
+    <button id="btn1">点击显示文本</button>
+    <button id="btn2">切换显示/隐藏</button>
+    <button id="btn3">添加列表项</button>
+
+    <!-- 显示区域 -->
+    <div id="text"></div>
+
+    <!-- 动画盒子 -->
+    <div class="box" id="box">我是盒子</div>
+
+    <!-- 动态列表 -->
+    <div id="list"></div>
+
+    <script>
+      $(function () {
+        // 1️⃣ 基础点击
+        $("#btn1").click(function () {
+          $("#text").text("你点击了按钮 👍");
+        });
+
+        // 2️⃣ 切换显示隐藏
+        $("#btn2").click(function () {
+          $("#box").fadeToggle();
+        });
+
+        // 3️⃣ 动态添加元素
+        $("#btn3").click(function () {
+          $("#list").append('<div class="item">新项目（点击可删除）</div>');
+        });
+
+        // 4️⃣ 事件委托（处理动态元素）
+        $("#list").on("click", ".item", function () {
+          $(this).fadeOut(function () {
+            $(this).remove();
+          });
+        });
+
+        // 5️⃣ 多事件绑定
+        $("#box").on("click dblclick", function (e) {
+          console.log("触发事件：" + e.type);
+        });
+      });
+    </script>
+  </body>
+</html>
