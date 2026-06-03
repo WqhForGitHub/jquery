@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jQuery dblclick demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <p id="demo">双击我试试 👆</p>
+
+    <script>
+      $(document).ready(function () {
+        $("#demo").dblclick(function () {
+          alert("你触发了双击事件！");
+        });
+      });
+    </script>
+  </body>
+</html>

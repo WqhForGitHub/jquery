@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>on demo</title>
+    <style>
+      div {
+        background: blue;
+        color: white;
+        height: 100px;
+        width: 150px;
+      }
+      div.contextmenu {
+        background: yellow;
+        color: black;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+  </head>
+  <body>
+    <div></div>
+    <span>Right click the block</span>
+
+    <script>
+      var div = $("div").first();
+      div.on("contextmenu", function () {
+        div.toggleClass("contextmenu");
+      });
+    </script>
+  </body>
+</html>

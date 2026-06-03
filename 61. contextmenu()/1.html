@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>contextmenu demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div id="box" style="width: 200px; height: 200px; background: #ddd">
+      右键点击我
+    </div>
+
+    <script>
+      $("#box").contextmenu(function (e) {
+        e.preventDefault(); // 阻止默认右键菜单
+        alert("你触发了右键菜单！");
+      });
+    </script>
+  </body>
+</html>
