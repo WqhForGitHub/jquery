@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="start">开始任务</button>
+    <div id="log"></div>
+
+    <script>
+      function asyncTask() {
+        var dfd = $.Deferred();
+
+        var progress = 0;
+
+        var timer = setInterval(function () {
+          progress += 20;
+
+          // 👇 通知进度
+          dfd.notify(progress);
+
+          if (progress >= 100) {
+            clearInterval(timer);
+            dfd.resolve("完成！");
+          }
+        }, 500);
+
+        return dfd.promise();
+      }
+
+      // 点击触发
+      $("#start").click(function () {
+        asyncTask()
+          .progress(function (p) {
+            $("#log").append("<p>进度：" + p + "%</p>");
+          })
+          .done(function (msg) {
+            $("#log").append("<p>" + msg + "</p>");
+          });
+      });
+    </script>
+  </body>
+</html>

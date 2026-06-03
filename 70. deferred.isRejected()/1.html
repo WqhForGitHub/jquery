@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>deferred.isRejected demo</title>
+    <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">执行失败</button>
+
+    <script>
+      $(function () {
+        $("#btn").click(function () {
+          var dfd = $.Deferred();
+
+          // 失败回调
+          dfd.fail(function () {
+            console.log("fail 回调执行");
+          });
+
+          // 主动触发 reject
+          dfd.reject();
+
+          // 判断是否 rejected
+          if (dfd.isRejected()) {
+            console.log("当前状态：已拒绝 (rejected)");
+          } else {
+            console.log("当前状态：未拒绝");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

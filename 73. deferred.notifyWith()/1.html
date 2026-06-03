@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="start">开始任务</button>
+    <div id="log"></div>
+
+    <script>
+      $(function () {
+        var dfd = $.Deferred();
+
+        // progress 回调
+        dfd.progress(function (percent) {
+          $("#log").append(
+            "<p>进度：" + percent + "%，this.name = " + this.name + "</p>",
+          );
+        });
+
+        // 完成回调
+        dfd.done(function () {
+          $("#log").append("<p>任务完成 ✅</p>");
+        });
+
+        $("#start").click(function () {
+          var contextObj = { name: "任务上下文对象" };
+
+          let i = 0;
+
+          let timer = setInterval(function () {
+            i += 20;
+
+            // ⭐ 核心：notifyWith
+            dfd.notifyWith(contextObj, [i]);
+
+            if (i >= 100) {
+              clearInterval(timer);
+              dfd.resolve();
+            }
+          }, 500);
+        });
+      });
+    </script>
+  </body>
+</html>

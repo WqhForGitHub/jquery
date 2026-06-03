@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  </head>
+  <body>
+    <button id="check">检查状态</button>
+
+    <script>
+      var dfd = $.Deferred();
+
+      // 1. 初始状态
+      console.log("初始 isResolved:", dfd.isResolved()); // false
+
+      // 2. 绑定成功回调
+      dfd.done(function () {
+        console.log("Deferred 已 resolve");
+      });
+
+      // 3. 延迟2秒后 resolve
+      setTimeout(function () {
+        dfd.resolve();
+      }, 2000);
+
+      // 4. 点击按钮查看状态
+      $("#check").click(function () {
+        console.log("当前 isResolved:", dfd.isResolved());
+      });
+    </script>
+  </body>
+</html>
