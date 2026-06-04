@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>内容折叠展开（Accordion） - jQuery Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        background: #f0f2f5;
+        color: #333;
+        padding: 30px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 28px;
+        color: #1a1a2e;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #888;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1a1a2e;
+      }
+
+      .card-desc {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 16px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: #4361ee;
+        color: #fff;
+      }
+      .btn-success {
+        background: #2ec4b6;
+        color: #fff;
+      }
+      .btn-warning {
+        background: #ff9f1c;
+        color: #fff;
+      }
+      .btn-danger {
+        background: #e71d36;
+        color: #fff;
+      }
+      .btn-info {
+        background: #7209b7;
+        color: #fff;
+      }
+      .btn-dark {
+        background: #1a1a2e;
+        color: #fff;
+      }
+
+      /* ===== 通用 Accordion 样式 ===== */
+      .accordion {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .accordion-item {
+        border-bottom: 1px solid #eee;
+      }
+
+      .accordion-item:last-child {
+        border-bottom: none;
+      }
+
+      .accordion-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 500;
+        user-select: none;
+        transition: background 0.2s;
+      }
+
+      .accordion-header:hover {
+        background: #f7f7f7;
+      }
+
+      .accordion-arrow {
+        font-size: 12px;
+        transition: transform 0.3s;
+        display: inline-block;
+      }
+
+      .accordion-item.active .accordion-arrow {
+        transform: rotate(90deg);
+      }
+
+      .accordion-body {
+        display: none;
+        padding: 14px 18px;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #555;
+      }
+
+      /* 主题变体 */
+      .accordion-theme-blue .accordion-header {
+        background: #e8f4fd;
+        color: #4361ee;
+      }
+      .accordion-theme-blue .accordion-item.active .accordion-header {
+        background: #4361ee;
+        color: #fff;
+      }
+
+      .accordion-theme-green .accordion-header {
+        background: #e6f9f7;
+        color: #2ec4b6;
+      }
+      .accordion-theme-green .accordion-item.active .accordion-header {
+        background: #2ec4b6;
+        color: #fff;
+      }
+
+      .accordion-theme-orange .accordion-header {
+        background: #fff5e6;
+        color: #ff9f1c;
+      }
+      .accordion-theme-orange .accordion-item.active .accordion-header {
+        background: #ff9f1c;
+        color: #fff;
+      }
+
+      .accordion-theme-red .accordion-header {
+        background: #fde8ec;
+        color: #e71d36;
+      }
+      .accordion-theme-red .accordion-item.active .accordion-header {
+        background: #e71d36;
+        color: #fff;
+      }
+
+      .accordion-theme-purple .accordion-header {
+        background: #f3e8fd;
+        color: #7209b7;
+      }
+      .accordion-theme-purple .accordion-item.active .accordion-header {
+        background: #7209b7;
+        color: #fff;
+      }
+
+      .accordion-theme-dark .accordion-header {
+        background: #e8e8f0;
+        color: #1a1a2e;
+      }
+      .accordion-theme-dark .accordion-item.active .accordion-header {
+        background: #1a1a2e;
+        color: #fff;
+      }
+
+      /* 带图标的 header */
+      .accordion-header .header-icon {
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      .accordion-header-left {
+        display: flex;
+        align-items: center;
+      }
+
+      /* 速度控制 */
+      .speed-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .speed-control input[type="range"] {
+        flex: 1;
+        max-width: 200px;
+      }
+
+      .speed-label {
+        min-width: 40px;
+        text-align: right;
+        font-weight: 600;
+        color: #1a1a2e;
+      }
+
+      /* 状态栏 */
+      .status-bar {
+        margin-top: 12px;
+        padding: 8px 14px;
+        background: #f7f7f7;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .status-bar span {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>内容折叠展开（Accordion）</h1>
+    <p class="subtitle">
+      jQuery slideToggle / slideDown / slideUp 实现手风琴折叠面板
+    </p>
+
+    <div class="container">
+      <!-- 1. 基础折叠面板 -->
+      <div class="card">
+        <div class="card-title">1. 基础折叠面板</div>
+        <div class="card-desc">
+          点击标题展开/折叠内容，同一时间只展开一个面板
+        </div>
+        <div class="accordion accordion-theme-blue" id="acc1">
+          <div class="accordion-item active">
+            <div class="accordion-header">
+              <div class="accordion-header-left">什么是 jQuery？</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body" style="display: block">
+              jQuery 是一个快速、小型且功能丰富的 JavaScript 库。它使 HTML
+              文档遍历和操作、事件处理、动画和 Ajax
+              等事情变得更加简单，具有易于使用的 API，可在多种浏览器中工作。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">jQuery 的优势是什么？</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              jQuery
+              的主要优势包括：简洁的语法、出色的跨浏览器兼容性、丰富的插件生态、强大的选择器引擎、以及内置的动画效果支持。它极大地简化了
+              DOM 操作和事件处理。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">如何引入 jQuery？</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              可以通过 CDN 引入 jQuery，例如使用 jsDelivr 或 cdnjs 等公共
+              CDN。也可以下载 jQuery 文件到本地，然后通过 &lt;script&gt;
+              标签引入。推荐使用 CDN 方式以获得更快的加载速度。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 多面板展开 -->
+      <div class="card">
+        <div class="card-title">2. 多面板同时展开</div>
+        <div class="card-desc">允许多个面板同时处于展开状态，互不影响</div>
+        <div class="accordion accordion-theme-green" id="acc2">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">HTML 基础</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              HTML（超文本标记语言）是构建网页内容的标准标记语言。它定义了网页的结构和语义，通过标签来组织文本、图片、链接等内容。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">CSS 基础</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              CSS（层叠样式表）用于描述 HTML
+              文档的呈现方式。它控制布局、颜色、字体、间距等视觉效果，使网页更具吸引力和可用性。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">JavaScript 基础</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              JavaScript 是一种动态编程语言，可为网页添加交互功能。它可以操作
+              DOM、处理事件、发送网络请求，是实现动态网页效果的核心技术。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 带图标的折叠面板 -->
+      <div class="card">
+        <div class="card-title">3. 带图标的折叠面板</div>
+        <div class="card-desc">每个面板标题前带有图标，增强视觉辨识度</div>
+        <div class="accordion accordion-theme-orange" id="acc3">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">
+                <span class="header-icon">&#9881;</span>系统设置
+              </div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              在系统设置中，你可以配置网站的基本信息、站点名称、描述、Logo
+              等。同时可以设置默认语言、时区和日期格式等全局参数。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">
+                <span class="header-icon">&#128100;</span>用户管理
+              </div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              用户管理模块允许你添加、编辑和删除用户账号。支持角色分配、权限设置，以及用户分组管理功能。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">
+                <span class="header-icon">&#128274;</span>安全配置
+              </div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              安全配置包括密码策略设置、登录尝试限制、双因素认证开关、IP
+              白名单管理以及操作日志审计等安全相关功能。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">
+                <span class="header-icon">&#128230;</span>数据备份
+              </div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              数据备份功能支持自动定时备份和手动即时备份。可配置备份保留策略、存储位置，以及一键恢复已备份的数据。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 可调动画速度 -->
+      <div class="card">
+        <div class="card-title">4. 可调动画速度</div>
+        <div class="card-desc">通过滑块调节展开/折叠的动画速度</div>
+        <div class="speed-control">
+          <label>动画速度：</label>
+          <input
+            type="range"
+            id="speed-range"
+            min="100"
+            max="2000"
+            value="400"
+            step="100"
+          />
+          <span class="speed-label" id="speed-label">400ms</span>
+        </div>
+        <div class="accordion accordion-theme-red" id="acc4">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">前端框架对比</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              React 由 Meta 开发，采用虚拟 DOM 和 JSX 语法；Vue
+              由尤雨溪创建，以渐进式架构著称；Angular 由 Google
+              维护，提供完整的开发框架。三者各有优势，选择取决于项目需求。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">构建工具演进</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              从 Grunt 到 Gulp，再到 Webpack、Rollup、Vite 和
+              esbuild，前端构建工具不断演进。Vite 利用原生 ES Module
+              实现了极速开发体验，成为当前最流行的选择之一。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">TypeScript 的崛起</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              TypeScript 为 JavaScript
+              添加了静态类型检查，显著提升了代码可维护性和开发体验。它已成为大型前端项目的标配，Angular、Vue
+              3 和 Deno 等都原生支持 TypeScript。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 全部展开/折叠控制 -->
+      <div class="card">
+        <div class="card-title">5. 全部展开 / 全部折叠</div>
+        <div class="card-desc">通过按钮一键控制所有面板的展开或折叠状态</div>
+        <div class="btn-group">
+          <button class="btn btn-info" id="btn-expand-all">全部展开</button>
+          <button class="btn btn-info" id="btn-collapse-all">全部折叠</button>
+          <button class="btn btn-info" id="btn-toggle-all">全部切换</button>
+        </div>
+        <div class="accordion accordion-theme-purple" id="acc5">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">设计原则</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              好的设计应该遵循一致性、可用性和可访问性原则。界面元素应保持统一的视觉风格，操作流程应符合用户直觉，同时要兼顾不同能力用户的使用需求。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">色彩理论</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              色彩搭配需要考虑色相、饱和度和明度三个维度。互补色创造对比，类似色营造和谐。在
+              UI 设计中，常用 60-30-10 法则分配主色、辅色和强调色的比例。
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">响应式设计</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              响应式设计使网页能够自适应不同屏幕尺寸。通过媒体查询、弹性布局和相对单位，确保内容在手机、平板和桌面设备上都能良好展示。
+            </div>
+          </div>
+        </div>
+        <div class="status-bar" id="status5">
+          当前展开面板数：<span>0</span>
+        </div>
+      </div>
+
+      <!-- 6. 嵌套折叠面板 -->
+      <div class="card">
+        <div class="card-title">6. 嵌套折叠面板</div>
+        <div class="card-desc">面板内部包含子面板，实现多层级内容折叠</div>
+        <div class="accordion accordion-theme-dark" id="acc6">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">前端开发</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              <div
+                class="accordion accordion-theme-dark"
+                style="margin-top: 4px"
+              >
+                <div class="accordion-item">
+                  <div class="accordion-header">
+                    <div class="accordion-header-left">HTML5 新特性</div>
+                    <span class="accordion-arrow">&#9654;</span>
+                  </div>
+                  <div class="accordion-body">
+                    HTML5 引入了语义化标签（header、nav、section 等）、Canvas
+                    绘图、本地存储（localStorage/sessionStorage）、Web
+                    Workers、Geolocation API 等重要特性。
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <div class="accordion-header">
+                    <div class="accordion-header-left">CSS3 动画</div>
+                    <span class="accordion-arrow">&#9654;</span>
+                  </div>
+                  <div class="accordion-body">
+                    CSS3 提供了 transition 和 animation 两种动画方式。transition
+                    适合简单的状态过渡，animation 配合 @keyframes
+                    可实现复杂的关键帧动画。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-header-left">后端开发</div>
+              <span class="accordion-arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+              <div
+                class="accordion accordion-theme-dark"
+                style="margin-top: 4px"
+              >
+                <div class="accordion-item">
+                  <div class="accordion-header">
+                    <div class="accordion-header-left">Node.js</div>
+                    <span class="accordion-arrow">&#9654;</span>
+                  </div>
+                  <div class="accordion-body">
+                    Node.js 是基于 Chrome V8 引擎的 JavaScript
+                    运行时，采用事件驱动和非阻塞 I/O
+                    模型，适合构建高性能的网络应用。
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <div class="accordion-header">
+                    <div class="accordion-header-left">数据库</div>
+                    <span class="accordion-arrow">&#9654;</span>
+                  </div>
+                  <div class="accordion-body">
+                    常用数据库包括关系型（MySQL、PostgreSQL）和非关系型（MongoDB、Redis）。选择取决于数据结构、查询需求和性能要求。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(function () {
+        // ===== 1. 基础手风琴（互斥，同一时间只展开一个） =====
+        $("#acc1").on("click", ".accordion-header", function () {
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          if ($item.hasClass("active")) {
+            // 点击已展开项 → 折叠
+            $item.removeClass("active");
+            $body.slideUp(300);
+          } else {
+            // 折叠其他所有项
+            $("#acc1 .accordion-item").removeClass("active");
+            $("#acc1 .accordion-body").slideUp(300);
+            // 展开当前项
+            $item.addClass("active");
+            $body.slideDown(300);
+          }
+        });
+
+        // ===== 2. 多面板同时展开（互不影响） =====
+        $("#acc2").on("click", ".accordion-header", function () {
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          $item.toggleClass("active");
+          $body.slideToggle(300);
+        });
+
+        // ===== 3. 带图标的折叠面板（互斥模式） =====
+        $("#acc3").on("click", ".accordion-header", function () {
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          if ($item.hasClass("active")) {
+            $item.removeClass("active");
+            $body.slideUp(300);
+          } else {
+            $("#acc3 .accordion-item").removeClass("active");
+            $("#acc3 .accordion-body").slideUp(300);
+            $item.addClass("active");
+            $body.slideDown(300);
+          }
+        });
+
+        // ===== 4. 可调动画速度 =====
+        var speed = 400;
+
+        $("#speed-range").on("input", function () {
+          speed = parseInt($(this).val(), 10);
+          $("#speed-label").text(speed + "ms");
+        });
+
+        $("#acc4").on("click", ".accordion-header", function () {
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          if ($item.hasClass("active")) {
+            $item.removeClass("active");
+            $body.slideUp(speed);
+          } else {
+            $("#acc4 .accordion-item").removeClass("active");
+            $("#acc4 .accordion-body").slideUp(speed);
+            $item.addClass("active");
+            $body.slideDown(speed);
+          }
+        });
+
+        // ===== 5. 全部展开/折叠控制 =====
+        $("#acc5").on("click", ".accordion-header", function () {
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          $item.toggleClass("active");
+          $body.slideToggle(300);
+          updateStatus5();
+        });
+
+        $("#btn-expand-all").on("click", function () {
+          $("#acc5 .accordion-item").addClass("active");
+          $("#acc5 .accordion-body").slideDown(300, updateStatus5);
+        });
+
+        $("#btn-collapse-all").on("click", function () {
+          $("#acc5 .accordion-item").removeClass("active");
+          $("#acc5 .accordion-body").slideUp(300, updateStatus5);
+        });
+
+        $("#btn-toggle-all").on("click", function () {
+          $("#acc5 .accordion-item").each(function () {
+            var $item = $(this);
+            var $body = $item.find(".accordion-body");
+            $item.toggleClass("active");
+            $body.slideToggle(300);
+          });
+          setTimeout(updateStatus5, 350);
+        });
+
+        function updateStatus5() {
+          var count = $("#acc5 .accordion-item.active").length;
+          $("#status5 span").text(count);
+        }
+
+        // 初始化状态
+        updateStatus5();
+
+        // ===== 6. 嵌套折叠面板 =====
+        // 使用事件委托，只操作直接子级
+        $("#acc6").on("click", ".accordion-header", function (e) {
+          e.stopPropagation();
+          var $accordion = $(this).closest(".accordion");
+          var $item = $(this).parent();
+          var $body = $(this).next(".accordion-body");
+
+          // 仅在直接子项间互斥
+          var $siblings = $accordion.children(".accordion-item");
+
+          if ($item.hasClass("active")) {
+            $item.removeClass("active");
+            $body.slideUp(300);
+          } else {
+            $siblings.removeClass("active");
+            $siblings.children(".accordion-body").slideUp(300);
+            $item.addClass("active");
+            $body.slideDown(300);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
