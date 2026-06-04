@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>元素显示隐藏切换器 - jQuery Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        background: #f0f2f5;
+        color: #333;
+        padding: 30px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 28px;
+        color: #1a1a2e;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #888;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1a1a2e;
+      }
+
+      .card-desc {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 16px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: #4361ee;
+        color: #fff;
+      }
+      .btn-success {
+        background: #2ec4b6;
+        color: #fff;
+      }
+      .btn-warning {
+        background: #ff9f1c;
+        color: #fff;
+      }
+      .btn-danger {
+        background: #e71d36;
+        color: #fff;
+      }
+      .btn-info {
+        background: #7209b7;
+        color: #fff;
+      }
+      .btn-dark {
+        background: #1a1a2e;
+        color: #fff;
+      }
+
+      .demo-box {
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .demo-box-1 {
+        background: #e8f4fd;
+        color: #4361ee;
+        border: 2px dashed #4361ee;
+      }
+      .demo-box-2 {
+        background: #e6f9f7;
+        color: #2ec4b6;
+        border: 2px dashed #2ec4b6;
+      }
+      .demo-box-3 {
+        background: #fff5e6;
+        color: #ff9f1c;
+        border: 2px dashed #ff9f1c;
+      }
+      .demo-box-4 {
+        background: #fde8ec;
+        color: #e71d36;
+        border: 2px dashed #e71d36;
+      }
+      .demo-box-5 {
+        background: #f3e8fd;
+        color: #7209b7;
+        border: 2px dashed #7209b7;
+      }
+      .demo-box-6 {
+        background: #e8e8f0;
+        color: #1a1a2e;
+        border: 2px dashed #1a1a2e;
+      }
+
+      .multi-boxes {
+        display: flex;
+        gap: 12px;
+      }
+
+      .multi-box {
+        flex: 1;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .mb-1 {
+        background: #e8f4fd;
+        color: #4361ee;
+      }
+      .mb-2 {
+        background: #e6f9f7;
+        color: #2ec4b6;
+      }
+      .mb-3 {
+        background: #fff5e6;
+        color: #ff9f1c;
+      }
+
+      .status-bar {
+        margin-top: 12px;
+        padding: 8px 14px;
+        background: #f7f7f7;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .status-bar span {
+        font-weight: 600;
+      }
+
+      .speed-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .speed-control input[type="range"] {
+        flex: 1;
+        max-width: 200px;
+      }
+
+      .speed-label {
+        min-width: 40px;
+        text-align: right;
+        font-weight: 600;
+        color: #1a1a2e;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>元素显示隐藏切换器</h1>
+    <p class="subtitle">jQuery show / hide / toggle / fade / slide 方法演示</p>
+
+    <div class="container">
+      <!-- 1. show() / hide() -->
+      <div class="card">
+        <div class="card-title">1. show() / hide()</div>
+        <div class="card-desc">基础显示与隐藏，可指定动画时长</div>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="btn-show">show()</button>
+          <button class="btn btn-primary" id="btn-hide">hide()</button>
+          <button class="btn btn-primary" id="btn-show-fast">
+            show("fast")
+          </button>
+          <button class="btn btn-primary" id="btn-hide-slow">
+            hide("slow")
+          </button>
+        </div>
+        <div class="demo-box demo-box-1" id="box1">我是 show/hide 目标元素</div>
+        <div class="status-bar" id="status1">当前状态：<span>显示</span></div>
+      </div>
+
+      <!-- 2. toggle() -->
+      <div class="card">
+        <div class="card-title">2. toggle()</div>
+        <div class="card-desc">在显示与隐藏之间自动切换</div>
+        <div class="btn-group">
+          <button class="btn btn-success" id="btn-toggle">toggle()</button>
+          <button class="btn btn-success" id="btn-toggle-fast">
+            toggle("fast")
+          </button>
+          <button class="btn btn-success" id="btn-toggle-slow">
+            toggle("slow")
+          </button>
+          <button class="btn btn-success" id="btn-toggle-500">
+            toggle(500)
+          </button>
+        </div>
+        <div class="demo-box demo-box-2" id="box2">我是 toggle 目标元素</div>
+      </div>
+
+      <!-- 3. fadeIn() / fadeOut() / fadeToggle() -->
+      <div class="card">
+        <div class="card-title">3. fadeIn() / fadeOut() / fadeToggle()</div>
+        <div class="card-desc">淡入淡出效果，通过透明度过渡实现</div>
+        <div class="btn-group">
+          <button class="btn btn-warning" id="btn-fadein">fadeIn()</button>
+          <button class="btn btn-warning" id="btn-fadeout">fadeOut()</button>
+          <button class="btn btn-warning" id="btn-fadetoggle">
+            fadeToggle()
+          </button>
+        </div>
+        <div class="demo-box demo-box-3" id="box3">我是 fade 目标元素</div>
+      </div>
+
+      <!-- 4. slideDown() / slideUp() / slideToggle() -->
+      <div class="card">
+        <div class="card-title">4. slideDown() / slideUp() / slideToggle()</div>
+        <div class="card-desc">滑动效果，通过高度过渡实现</div>
+        <div class="btn-group">
+          <button class="btn btn-danger" id="btn-slidedown">slideDown()</button>
+          <button class="btn btn-danger" id="btn-slideup">slideUp()</button>
+          <button class="btn btn-danger" id="btn-slidetoggle">
+            slideToggle()
+          </button>
+        </div>
+        <div class="demo-box demo-box-4" id="box4">我是 slide 目标元素</div>
+      </div>
+
+      <!-- 5. fadeTo() 透明度控制 -->
+      <div class="card">
+        <div class="card-title">5. fadeTo() 透明度控制</div>
+        <div class="card-desc">将元素透明度渐变到指定值（0~1）</div>
+        <div class="btn-group">
+          <button class="btn btn-info" id="btn-fadeto-1">fadeTo(0.2)</button>
+          <button class="btn btn-info" id="btn-fadeto-2">fadeTo(0.5)</button>
+          <button class="btn btn-info" id="btn-fadeto-3">fadeTo(0.8)</button>
+          <button class="btn btn-info" id="btn-fadeto-4">fadeTo(1.0)</button>
+        </div>
+        <div class="demo-box demo-box-5" id="box5">我是 fadeTo 目标元素</div>
+      </div>
+
+      <!-- 6. 多元素切换 + 可调速度 -->
+      <div class="card">
+        <div class="card-title">6. 多元素切换 + 可调速度</div>
+        <div class="card-desc">同时控制多个元素，支持自定义动画速度</div>
+        <div class="speed-control">
+          <label>动画速度：</label>
+          <input
+            type="range"
+            id="speed-range"
+            min="100"
+            max="2000"
+            value="400"
+            step="100"
+          />
+          <span class="speed-label" id="speed-label">400ms</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-dark" id="btn-all-show">全部显示</button>
+          <button class="btn btn-dark" id="btn-all-hide">全部隐藏</button>
+          <button class="btn btn-dark" id="btn-all-toggle">全部切换</button>
+          <button class="btn btn-dark" id="btn-serial">依次显示</button>
+        </div>
+        <div class="multi-boxes">
+          <div class="multi-box mb-1" id="mbox1">元素 A</div>
+          <div class="multi-box mb-2" id="mbox2">元素 B</div>
+          <div class="multi-box mb-3" id="mbox3">元素 C</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(function () {
+        // ===== 1. show / hide =====
+        var $box1 = $("#box1");
+
+        $("#btn-show").on("click", function () {
+          $box1.show(function () {
+            updateStatus1();
+          });
+        });
+
+        $("#btn-hide").on("click", function () {
+          $box1.hide(function () {
+            updateStatus1();
+          });
+        });
+
+        $("#btn-show-fast").on("click", function () {
+          $box1.show("fast", function () {
+            updateStatus1();
+          });
+        });
+
+        $("#btn-hide-slow").on("click", function () {
+          $box1.hide("slow", function () {
+            updateStatus1();
+          });
+        });
+
+        function updateStatus1() {
+          var visible = $box1.is(":visible");
+          $("#status1 span").text(visible ? "显示" : "隐藏");
+        }
+
+        // ===== 2. toggle =====
+        var $box2 = $("#box2");
+
+        $("#btn-toggle").on("click", function () {
+          $box2.toggle();
+        });
+
+        $("#btn-toggle-fast").on("click", function () {
+          $box2.toggle("fast");
+        });
+
+        $("#btn-toggle-slow").on("click", function () {
+          $box2.toggle("slow");
+        });
+
+        $("#btn-toggle-500").on("click", function () {
+          $box2.toggle(500);
+        });
+
+        // ===== 3. fade =====
+        var $box3 = $("#box3");
+
+        $("#btn-fadein").on("click", function () {
+          $box3.fadeIn();
+        });
+
+        $("#btn-fadeout").on("click", function () {
+          $box3.fadeOut();
+        });
+
+        $("#btn-fadetoggle").on("click", function () {
+          $box3.fadeToggle();
+        });
+
+        // ===== 4. slide =====
+        var $box4 = $("#box4");
+
+        $("#btn-slidedown").on("click", function () {
+          $box4.slideDown();
+        });
+
+        $("#btn-slideup").on("click", function () {
+          $box4.slideUp();
+        });
+
+        $("#btn-slidetoggle").on("click", function () {
+          $box4.slideToggle();
+        });
+
+        // ===== 5. fadeTo =====
+        var $box5 = $("#box5");
+
+        $("#btn-fadeto-1").on("click", function () {
+          $box5.fadeTo(400, 0.2);
+        });
+
+        $("#btn-fadeto-2").on("click", function () {
+          $box5.fadeTo(400, 0.5);
+        });
+
+        $("#btn-fadeto-3").on("click", function () {
+          $box5.fadeTo(400, 0.8);
+        });
+
+        $("#btn-fadeto-4").on("click", function () {
+          $box5.fadeTo(400, 1.0);
+        });
+
+        // ===== 6. 多元素 + 可调速度 =====
+        var $multiBoxes = $("#mbox1, #mbox2, #mbox3");
+        var speed = 400;
+
+        $("#speed-range").on("input", function () {
+          speed = parseInt($(this).val(), 10);
+          $("#speed-label").text(speed + "ms");
+        });
+
+        $("#btn-all-show").on("click", function () {
+          $multiBoxes.show(speed);
+        });
+
+        $("#btn-all-hide").on("click", function () {
+          $multiBoxes.hide(speed);
+        });
+
+        $("#btn-all-toggle").on("click", function () {
+          $multiBoxes.toggle(speed);
+        });
+
+        $("#btn-serial").on("click", function () {
+          // 先全部隐藏，再依次滑入
+          $multiBoxes.hide();
+          $("#mbox1").slideDown(speed, function () {
+            $("#mbox2").slideDown(speed, function () {
+              $("#mbox3").slideDown(speed);
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
