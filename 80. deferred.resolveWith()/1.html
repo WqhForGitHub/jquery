@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>resolveWith demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <script>
+      // 创建 Deferred 对象
+      var dfd = $.Deferred();
+
+      // 定义一个对象，作为 this
+      var user = {
+        name: "张三",
+      };
+
+      // 注册成功回调
+      dfd.done(function (age, city) {
+        console.log("this.name =", this.name); // 👉 来自 context
+        console.log("age =", age);
+        console.log("city =", city);
+      });
+
+      // 2 秒后触发 resolveWith
+      setTimeout(function () {
+        dfd.resolveWith(user, [25, "北京"]);
+      }, 2000);
+    </script>
+  </body>
+</html>

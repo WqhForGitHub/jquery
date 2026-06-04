@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>rejectWith demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">点击触发 rejectWith</button>
+
+    <script>
+      $(function () {
+        $("#btn").click(function () {
+          var dfd = $.Deferred();
+
+          // 注册失败回调
+          dfd.fail(function (msg, code) {
+            console.log("this.name =", this.name);
+            console.log("msg =", msg);
+            console.log("code =", code);
+          });
+
+          // 自定义上下文对象
+          var context = {
+            name: "我是自定义this",
+          };
+
+          // 触发 rejectWith
+          dfd.rejectWith(context, ["出错了", 500]);
+        });
+      });
+    </script>
+  </body>
+</html>

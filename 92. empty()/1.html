@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>empty demo</title>
+    <style>
+      p {
+        background: yellow;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+  </head>
+  <body>
+    <p>Hello, <span>Person</span> <em>and person</em>.</p>
+
+    <button>Call empty() on above paragraph</button>
+
+    <script>
+      $("button").on("click", function () {
+        $("p").empty();
+      });
+    </script>
+  </body>
+</html>

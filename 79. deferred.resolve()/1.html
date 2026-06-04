@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">点击完成任务</button>
+
+    <script>
+      // 1. 创建 Deferred 对象
+      var dfd = $.Deferred();
+
+      // 2. 注册成功回调（done）
+      dfd.done(function (msg) {
+        console.log("成功回调执行:", msg);
+      });
+
+      // 3. 模拟一个操作（点击按钮后完成）
+      $("#btn").click(function () {
+        console.log("任务完成，调用 resolve()");
+
+        // 4. 标记任务完成
+        dfd.resolve("任务成功啦！");
+      });
+    </script>
+  </body>
+</html>

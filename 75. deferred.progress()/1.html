@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jQuery deferred.progress demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      #bar {
+        width: 0;
+        height: 20px;
+        background: green;
+        transition: width 0.3s;
+      }
+      #container {
+        width: 300px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="start">开始任务</button>
+    <div id="container">
+      <div id="bar"></div>
+    </div>
+    <p id="text">进度：0%</p>
+
+    <script>
+      $("#start").click(function () {
+        var dfd = $.Deferred();
+
+        // 注册 progress 回调
+        dfd.progress(function (percent) {
+          $("#bar").css("width", percent + "%");
+          $("#text").text("进度：" + percent + "%");
+        });
+
+        // 模拟异步任务
+        var progress = 0;
+        var timer = setInterval(function () {
+          progress += 10;
+
+          // 通知进度
+          dfd.notify(progress);
+
+          if (progress >= 100) {
+            clearInterval(timer);
+            dfd.resolve(); // 完成
+          }
+        }, 500);
+
+        // 完成回调
+        dfd.done(function () {
+          console.log("任务完成！");
+        });
+      });
+    </script>
+  </body>
+</html>

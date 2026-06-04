@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>jQuery error demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <img id="img1" src="notfound.png" alt="test image" />
+
+    <script>
+      $(document).ready(function () {
+        // 推荐写法（jQuery 3+）
+        $("#img1").on("error", function () {
+          console.log("图片加载失败！");
+          $(this).attr("src", "fallback.png"); // 替换默认图
+        });
+      });
+    </script>
+  </body>
+</html>

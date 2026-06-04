@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>deferred.reject demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">点击触发失败</button>
+    <div id="log"></div>
+
+    <script>
+      $("#btn").click(function () {
+        var dfd = $.Deferred();
+
+        // 成功回调（不会执行）
+        dfd.done(function () {
+          $("#log").append("<p style='color:green'>成功</p>");
+        });
+
+        // 失败回调（会执行）
+        dfd.fail(function (err) {
+          $("#log").append("<p style='color:red'>失败：" + err + "</p>");
+        });
+
+        // 模拟异步操作
+        setTimeout(function () {
+          dfd.reject("出错了！");
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

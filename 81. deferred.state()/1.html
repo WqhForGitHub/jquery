@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <button id="check">查看状态</button>
+    <button id="success">成功</button>
+    <button id="fail">失败</button>
+
+    <script>
+      var dfd = $.Deferred();
+
+      // 初始状态
+      console.log("初始状态:", dfd.state()); // pending
+
+      $("#check").click(function () {
+        console.log("当前状态:", dfd.state());
+      });
+
+      $("#success").click(function () {
+        dfd.resolve();
+        console.log("执行 resolve 后:", dfd.state()); // resolved
+      });
+
+      $("#fail").click(function () {
+        dfd.reject();
+        console.log("执行 reject 后:", dfd.state()); // rejected
+      });
+    </script>
+  </body>
+</html>
